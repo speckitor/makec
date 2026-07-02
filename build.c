@@ -4,15 +4,7 @@
 
 #include <sys/stat.h>
 
-void rebuild_build()
-{
-    char *cmd = "gcc build.c -o build";
-    printf("%s\n", cmd);
-    system(cmd);
-    execl("./build", NULL);
-}
-
-void try_rebuild()
+void try_rebuild(char **argv)
 {
     struct stat exe_info;
     struct stat src_info;
@@ -20,13 +12,17 @@ void try_rebuild()
     lstat("./build", &exe_info);
     lstat("./build.c", &src_info);
 
-    if (exe_info.st_ctime < src_info.st_ctime)
-        rebuild_build();
+    if (exe_info.st_ctime < src_info.st_ctime) {
+        char *cmd = "gcc build.c -o build";
+        printf("%s\n", cmd);
+        system(cmd);
+        execv("./build", argv);
+    }
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
-    try_rebuild();
+    try_rebuild(argv);
 
     char *cmd = "gcc main.c -o main";
     printf("%s\n", cmd);
