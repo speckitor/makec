@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <sys/stat.h>
 
@@ -8,6 +9,7 @@ void rebuild_build()
     char *cmd = "gcc build.c -o build";
     printf("%s\n", cmd);
     system(cmd);
+    execl("./build", NULL);
 }
 
 void try_rebuild()
@@ -26,7 +28,7 @@ int main(void)
 {
     try_rebuild();
 
-    char *cmd = "gcc main.c";
+    char *cmd = "gcc main.c -o main";
     printf("%s\n", cmd);
     system(cmd);
     return 0;
